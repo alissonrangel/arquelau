@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Epopeia de Arquelau — Ordem da Fênix e do Dragão</title>
+    <!-- Fonts Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            /* Cores Cósmicas e do Brasão */
+            --bg-dark: #050711;
+            --bg-card: rgba(13, 18, 38, 0.75);
+            --gold-phoenix: #ffb703;
+            --gold-light: #ffe599;
+            --gold-glow: rgba(255, 183, 3, 0.4);
+            --cyan-dragon: #00f0ff;
+            --emerald-dragon: #05d5a1;
+            --dragon-glow: rgba(0, 240, 255, 0.35);
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border-gold: rgba(255, 183, 3, 0.3);
+            --border-cyan: rgba(0, 240, 255, 0.3);
+            --font-title: 'Cinzel', serif;
+            --font-deco: 'Cinzel Decorative', serif;
+            --font-body: 'Cormorant Garamond', serif;
+            --font-ui: 'Inter', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            font-size: 1.25rem;
+            line-height: 1.8;
+            overflow-x: hidden;
+            position: relative;
+            background-image:
+                radial-gradient(circle at 15% 20%, rgba(255, 183, 3, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 85% 80%, rgba(0, 240, 255, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(5, 7, 17, 0.9) 0%, #03040a 100%);
+            background-attachment: fixed;
+        }
+
+        /* Canvas de Fundo (Partículas Cosmológicas) */
+        #cosmos-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Cabeçalho da Epopeia */
+        header {
+            text-align: center;
+            padding: 80px 20px 40px;
+            position: relative;
+        }
+
+        .crest-frame {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 30px;
+            border-radius: 50%;
+            padding: 6px;
+            background: linear-gradient(135deg, var(--gold-phoenix), var(--cyan-dragon));
+            box-shadow: 0 0 35px var(--gold-glow), 0 0 35px var(--dragon-glow);
+            position: relative;
+            transition: transform 0.5s ease;
+        }
+
+        .crest-frame:hover {
+            transform: scale(1.05);
+        }
+
+        .crest-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--bg-dark);
+        }
+
+        .epic-subtitle {
+            font-family: var(--font-ui);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 6px;
+            color: var(--cyan-dragon);
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px var(--dragon-glow);
+        }
+
+        .epic-title {
+            font-family: var(--font-deco);
+            font-size: 3.2rem;
+            background: linear-gradient(135deg, #fff 20%, var(--gold-phoenix) 60%, var(--cyan-dragon) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            line-height: 1.2;
+        }
+
+        .epic-motto {
+            font-family: var(--font-title);
+            font-size: 1.1rem;
+            color: var(--gold-light);
+            font-style: italic;
+            letter-spacing: 1px;
+            opacity: 0.9;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 40px 0;
+            gap: 15px;
+        }
+
+        .divider-line {
+            height: 1px;
+            flex: 1;
+            background: linear-gradient(90deg, transparent, var(--gold-phoenix), transparent);
+        }
+
+        .divider-symbol {
+            color: var(--gold-phoenix);
+            font-size: 1.2rem;
+            text-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        /* Barra de Controle de Leitura */
+        .controls-bar {
+            position: sticky;
+            top: 20px;
+            z-index: 10;
+            background: rgba(8, 12, 28, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-gold);
+            border-radius: 50px;
+            padding: 10px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 60px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .audio-player {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: var(--font-ui);
+            font-size: 0.8rem;
+            color: var(--gold-light);
+        }
+
+        .audio-player audio {
+            width: 280px;
+            max-width: 100%;
+            height: 40px;
+            accent-color: var(--gold-phoenix);
+        }
+
+        .btn {
+            background: transparent;
+            border: 1px solid var(--border-gold);
+            color: var(--gold-light);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-family: var(--font-ui);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            background: var(--gold-phoenix);
+            color: var(--bg-dark);
+            box-shadow: 0 0 15px var(--gold-glow);
+            font-weight: 600;
+        }
+
+        .btn-dragon {
+            border-color: var(--border-cyan);
+            color: var(--cyan-dragon);
+        }
+
+        .btn-dragon:hover {
+            background: var(--cyan-dragon);
+            color: var(--bg-dark);
+            box-shadow: 0 0 15px var(--dragon-glow);
+        }
+
+        /* Layout Alternado de Poesia e Imagens */
+        .epic-section {
+            margin-bottom: 90px;
+            position: relative;
+        }
+
+        .canto-title {
+            font-family: var(--font-title);
+            font-size: 2rem;
+            color: var(--gold-phoenix);
+            text-align: center;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            position: relative;
+        }
+
+        .canto-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 2px;
+            background: var(--cyan-dragon);
+            margin: 10px auto 0;
+            box-shadow: 0 0 8px var(--cyan-dragon);
+        }
+
+        /* Grid Alternada */
+        .epic-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .epic-grid.reverse {
+            direction: rtl;
+        }
+
+        .epic-grid.reverse .poem-box {
+            direction: ltr;
+        }
+
+        .poem-box {
+            background: var(--bg-card);
+            border-left: 3px solid var(--gold-phoenix);
+            padding: 35px 30px;
+            border-radius: 0 12px 12px 0;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            position: relative;
+            backdrop-filter: blur(8px);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .epic-grid.reverse .poem-box {
+            border-left: none;
+            border-right: 3px solid var(--cyan-dragon);
+            border-radius: 12px 0 0 12px;
+        }
+
+        .poem-box:hover {
+            transform: translateY(-5px);
+        }
+
+        .stanza {
+            margin-bottom: 25px;
+            font-size: 1.3rem;
+            line-height: 1.9;
+            color: #f1f5f9;
+        }
+
+        .stanza:last-child {
+            margin-bottom: 0;
+        }
+
+        .stanza p {
+            margin-bottom: 4px;
+        }
+
+        .image-box {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-gold);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            aspect-ratio: 4/5;
+            background: #090e21;
+        }
+
+        .image-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s ease;
+        }
+
+        .image-box:hover img {
+            transform: scale(1.06);
+        }
+
+        .image-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            background: linear-gradient(to top, rgba(5, 7, 17, 0.95), transparent);
+            font-family: var(--font-ui);
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        /* Estilo da Armadura de Efésios 6 */
+        .armor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .armor-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-cyan);
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .armor-card:hover {
+            border-color: var(--gold-phoenix);
+            box-shadow: 0 0 20px var(--gold-glow);
+            transform: translateY(-4px);
+        }
+
+        .armor-icon {
+            font-size: 2rem;
+            color: var(--cyan-dragon);
+            margin-bottom: 10px;
+        }
+
+        .armor-title {
+            font-family: var(--font-title);
+            color: var(--gold-phoenix);
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .armor-desc {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Modal para Escrever / Adicionar Canto */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(3, 5, 12, 0.9);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-content {
+            background: #0d1226;
+            border: 1px solid var(--border-gold);
+            border-radius: 16px;
+            width: 90%;
+            max-width: 650px;
+            padding: 35px;
+            box-shadow: 0 0 50px var(--gold-glow);
+        }
+
+        .modal-header {
+            font-family: var(--font-title);
+            color: var(--gold-phoenix);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-family: var(--font-ui);
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            background: #050711;
+            border: 1px solid var(--border-cyan);
+            border-radius: 8px;
+            padding: 12px;
+            color: #fff;
+            font-family: var(--font-body);
+            font-size: 1.1rem;
+        }
+
+        .form-group textarea {
+            height: 150px;
+            resize: vertical;
+        }
+
+        /* Rodapé */
+        footer {
+            text-align: center;
+            padding: 60px 20px;
+            border-top: 1px solid rgba(255, 183, 3, 0.1);
+            margin-top: 80px;
+            font-family: var(--font-ui);
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .epic-title {
+                font-size: 2.2rem;
+            }
+
+            .epic-grid,
+            .epic-grid.reverse {
+                grid-template-columns: 1fr;
+                direction: ltr;
+            }
+
+            .controls-bar {
+                flex-direction: column;
+                gap: 15px;
+                border-radius: 20px;
+            }
+
+            .audio-player {
+                width: 100%;
+                flex-direction: column;
+                gap: 6px;
+            }
+
+            .audio-player audio {
+                width: 100%;
+            }
+            .stanza {
+                font-size: 16px;
+                line-height: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Canvas para estrelas e nébula -->
+    <canvas id="cosmos-canvas"></canvas>
+
+    <div class="container">
+        <!-- Cabeçalho -->
+        <header>
+            <div class="crest-frame">
+                <!-- Imagem do Brasão Gerada -->
+                <img src="./images/arq-em-nome-do-brasil.jpeg" alt="Brasão de Arquelau" class="crest-img"
+                    id="crest-image">
+            </div>
+            <div class="epic-subtitle">A Saga Celestial do Microcosmos</div>
+            <h1 class="epic-title">Arquelau, em nome do Brasil</h1>
+            <p class="epic-motto">"Com as Asas da Fênix, as Escamas do Dragão e a Armadura Celestial"</p>
+        </header>
+
+        <div class="divider">
+            <div class="divider-line"></div>
+            <div class="divider-symbol">✦ ✠ ✦</div>
+            <div class="divider-line"></div>
+        </div>
+
+        <!-- Barra de Ações -->
+        <div class="controls-bar">
+            <!-- <div class="btn-group">
+                <button class="btn" onclick="toggleTheme('phoenix')">Foco Fênix</button>
+                <button class="btn btn-dragon" onclick="toggleTheme('dragon')">Foco Dragão</button>
+            </div> -->
+            <!-- <div class="btn-group">
+                <button class="btn" onclick="openModal()">+ Escrever Canto</button>
+            </div> -->
+            <div class="audio-player">
+                <!-- <span>Clamor da Selva</span> -->
+                <audio controls preload="metadata" aria-label="Trilha sonora da página">
+                    <source src="./audio/Oguata_Nhanderu.mp3" type="audio/mpeg">
+                    Seu navegador não consegue reproduzir este áudio.
+                </audio>
+            </div>
+        </div>
+
+        <!-- Conteúdo Principal da Epopeia -->
+        <main id="epic-content">
+
+            <!-- CANTO I -->
+            <section class="epic-section">
+                <h2 class="canto-title">Canto I: Selando os Inimigos</h2>
+
+                <div class="poem-box">
+                    <div class="stanza">
+                        <p>E nos primórdios das eras</p>
+                        <p>Os Deuses se digladiavam</p>
+                        <p>Cada um com seu universo</p>
+                        <p>E em um plano se encontravam</p>
+                        ...
+                    </div>
+                    <div class="stanza">
+
+                    </div>
+                </div>
+                <div class="image-box2">
+                    <img style="width: 100%; margin-top: 30px; text-align: center;" src="./images/selando-satanas.jpeg"
+                        alt="Cosmos e Fênix">
+                </div>
+
+            </section>
+
+            <!-- CANTO II (Invertido) -->
+            <section class="epic-section">
+                <h2 class="canto-title">Canto II: O Clamor da Selva</h2>
+                <div class="poem-box">
+                    <div class="stanza">
+
+                    </div>
+                    <div class="stanza">
+
+                    </div>
+                </div>
+                <div class="image-box2">
+                    <!-- <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80"
+                            alt="Dragão e Luz">
+                        <div class="image-caption">A Proteção do Dragão e a Armadura Celestial</div> -->
+                        <img style="width: 100%; margin-top: 30px; text-align: center;" src="./images/o-clamor-da-selva.jpeg"
+                        alt="O Clamor da Selva">
+                </div>
+
+
+                <!-- Elementos da Armadura (Efésios 6) -->
+                <!--
+                <div class="armor-grid">
+                    <div class="armor-card">
+                        <div class="armor-icon">🛡️</div>
+                        <div class="armor-title">Escudo da Fé</div>
+                        <div class="armor-desc">Apaga todos os dardos inflamados do maligno com o brilho estelar.</div>
+                    </div>
+                    <div class="armor-card">
+                        <div class="armor-icon">⚔️</div>
+                        <div class="armor-title">Espada do Espírito</div>
+                        <div class="armor-desc">A Palavra viva temperada no fogo da Fênix e na força do Dragão.</div>
+                    </div>
+                    <div class="armor-card">
+                        <div class="armor-icon">👑</div>
+                        <div class="armor-title">Capacete da Salvação</div>
+                        <div class="armor-desc">A mente blindada pela visão da Cruz Menor e da Harmonia Celestial.</div>
+                    </div>
+                </div>
+            -->
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- Modal Escrever Novo Canto -->
+    <!--
+    <div class="modal" id="write-modal">
+        <div class="modal-content">
+            <div class="modal-header">Adicionar Novo Canto à Epopeia</div>
+            <div class="form-group">
+                <label for="canto-title-input">Título do Canto</label>
+                <input type="text" id="canto-title-input" placeholder="Ex: Canto III: O Voo sobre o Infinito">
+            </div>
+            <div class="form-group">
+                <label for="canto-verses-input">Estrofes (Separe linhas com Enter, estrofes com linha dupla)</label>
+                <textarea id="canto-verses-input"
+                    placeholder="Eis que o cavaleiro ergueu sua espada...&#10;Diante das estrelas da Cruz Menor..."></textarea>
+            </div>
+            <div class="form-group">
+                <label for="canto-img-input">URL da Imagem Ilustrativa</label>
+                <input type="text" id="canto-img-input" placeholder="https://exemplo.com/imagem.jpg">
+            </div>
+            <div style="display:flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+                <button class="btn" onclick="closeModal()">Cancelar</button>
+                <button class="btn btn-dragon" onclick="saveCanto()">Publicar Canto</button>
+            </div>
+        </div>
+    </div>
+-->
+
+    <!-- JavaScript Integrado -->
+    <script>
+        // Sistema de Partículas Cosmológicas no Canvas
+        const canvas = document.getElementById('cosmos-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        class Star {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.size = Math.random() * 2;
+                this.alpha = Math.random();
+                this.speed = Math.random() * 0.01 + 0.005;
+                this.color = Math.random() > 0.5 ? '#ffb703' : '#00f0ff';
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+
+            update() {
+                this.alpha += this.speed;
+                if (this.alpha > 1 || this.alpha < 0) {
+                    this.speed = -this.speed;
+                }
+            }
+        }
+
+        const stars = Array.from({ length: 150 }, () => new Star());
+
+        function animateCosmos() {
+            ctx.clearRect(0, 0, width, height);
+            stars.forEach(star => {
+                star.update();
+                star.draw();
+            });
+            requestAnimationFrame(animateCosmos);
+        }
+
+        animateCosmos();
+
+        // Modais de Edição
+        function openModal() {
+            document.getElementById('write-modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('write-modal').style.display = 'none';
+        }
+
+        // Alternador de Temas de Foco (Fênix ou Dragão)
+        function toggleTheme(mode) {
+            const root = document.documentElement;
+            if (mode === 'phoenix') {
+                root.style.setProperty('--gold-phoenix', '#ff8c00');
+                root.style.setProperty('--gold-glow', 'rgba(255, 140, 0, 0.6)');
+            } else if (mode === 'dragon') {
+                root.style.setProperty('--cyan-dragon', '#00ffff');
+                root.style.setProperty('--dragon-glow', 'rgba(0, 255, 255, 0.6)');
+            }
+        }
+
+        // Adicionar novo canto dinamicamente
+        let cantoCount = 2;
+        function saveCanto() {
+            const title = document.getElementById('canto-title-input').value;
+            const text = document.getElementById('canto-verses-input').value;
+            const imgUrl = document.getElementById('canto-img-input').value || 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80';
+
+            if (!title || !text) {
+                alert('Por favor, preencha o título e as estrofes do canto.');
+                return;
+            }
+
+            cantoCount++;
+            const isReverse = cantoCount % 2 === 0 ? 'reverse' : '';
+
+            // Formatar estrofes
+            const stanzas = text.split('\n\n').map(stanza => {
+                const lines = stanza.split('\n').map(line => `<p>${line}</p>`).join('');
+                return `<div class="stanza">${lines}</div>`;
+            }).join('');
+
+            const sectionHTML = `
+                <section class="epic-section">
+                    <h2 class="canto-title">${title}</h2>
+                    <div class="epic-grid ${isReverse}">
+                        <div class="poem-box">
+                            ${stanzas}
+                        </div>
+                        <div class="image-box">
+                            <img src="${imgUrl}" alt="${title}">
+                            <div class="image-caption">${title}</div>
+                        </div>
+                    </div>
+                </section>
+            `;
+
+            document.getElementById('epic-content').insertAdjacentHTML('beforeend', sectionHTML);
+
+            // Limpar formulário
+            document.getElementById('canto-title-input').value = '';
+            document.getElementById('canto-verses-input').value = '';
+            document.getElementById('canto-img-input').value = '';
+
+            closeModal();
+        }
+    </script>
+</body>
+
+</html>
