@@ -187,6 +187,47 @@
             text-shadow: 0 0 10px var(--gold-glow);
         }
 
+        .canto-index {
+            margin: 0 0 60px;
+            padding: 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-gold);
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .canto-index h2 {
+            margin-bottom: 16px;
+            color: var(--gold-phoenix);
+            font-family: var(--font-title);
+            font-size: 1.35rem;
+        }
+
+        .canto-index ul {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            padding: 0;
+            list-style: none;
+        }
+
+        .canto-index a {
+            display: block;
+            padding: 10px 16px;
+            border: 1px solid var(--border-cyan);
+            border-radius: 20px;
+            font-family: var(--font-ui);
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .canto-index a:hover,
+        .canto-index a:focus-visible {
+            color: var(--bg-dark);
+            background: var(--cyan-dragon);
+        }
+
         /* Barra de Controle de Leitura */
         .controls-bar {
             position: sticky;
@@ -546,6 +587,16 @@
             <div class="divider-line"></div>
         </div>
 
+        <nav class="canto-index" aria-label="Índice dos cantos">
+            <h2>Índice</h2>
+            <ul>
+                <li><a href="#canto-i">Canto I: Selando Satã</a></li>
+                <li><a href="#canto-ii">Canto II: O Clamor da Selva</a></li>
+                <li><a href="#canto-iii">Canto III: Em busca da Paz</a></li>
+                <li><a href="#canto-iv">Canto IV: Inimigos de Outras Dimensões</a></li>
+            </ul>
+        </nav>
+
         <!-- Barra de Ações -->
         <div class="controls-bar2">
             <!-- <div class="btn-group">
@@ -568,7 +619,7 @@
         <main id="epic-content">
 
             <!-- CANTO I -->
-            <section class="epic-section">
+            <section class="epic-section" id="canto-i">
                 <h2 class="canto-title">Canto I: Selando Satã</h2>
                 <div class="audio-player">
                     <!-- <span>Tony Guasu</span> -->
@@ -985,7 +1036,7 @@
             </section>
 
             <!-- CANTO II (Invertido) -->
-            <section class="epic-section">
+            <section class="epic-section" id="canto-ii">
                 <h2 class="canto-title">Canto II: O Clamor da Selva</h2>
                 <div class="audio-player">
                     <audio controls preload="metadata" loop aria-label="Trilha sonora da página">
@@ -1092,6 +1143,40 @@
                     </div>
                 </div>
             -->
+            </section>
+
+            <!-- CANTO III -->
+            <section class="epic-section" id="canto-iii">
+                <h2 class="canto-title">Canto III: Em busca da Paz</h2>
+                <div class="poem-box">
+                    <div class="stanza">
+                        <p>Versos do Canto III serão adicionados aqui.</p>
+                    </div>
+                </div>
+                <div class="image-box2">
+                    <!-- <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80"
+                            alt="Dragão e Luz">
+                        <div class="image-caption">A Proteção do Dragão e a Armadura Celestial</div> -->
+                    <img style="width: 100%; margin-top: 30px; text-align: center;"
+                        src="./images/a-paz-mundial.jpeg" alt="O Clamor da Selva">
+                </div>
+            </section>
+
+            <!-- CANTO IV -->
+            <section class="epic-section" id="canto-iv">
+                <h2 class="canto-title">Canto IV: Inimigos de Outro Espaço</h2>
+                <div class="poem-box">
+                    <div class="stanza">
+                        <p>Versos do Canto IV serão adicionados aqui.</p>
+                    </div>
+                </div>
+                <div class="image-box2">
+                    <!-- <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80"
+                            alt="Dragão e Luz">
+                        <div class="image-caption">A Proteção do Dragão e a Armadura Celestial</div> -->
+                    <img style="width: 100%; margin-top: 30px; text-align: center;"
+                        src="./images/guerra-inter-dimensoes.jpeg" alt="O Clamor da Selva">
+                </div>
             </section>
 
         </main>
